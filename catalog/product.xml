@@ -1,0 +1,325 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<specification xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+               xmlns="https://magento.com/open-specification"
+               xsi:schemaLocation="https://magento.com/open-specification ../specification.xsd">
+
+  <module name="magento.catalog">
+
+    <service name="product_management">
+      <summary>Product Management</summary>
+
+      <command name="update">
+        <summary>Create or update a product</summary>
+        <extensible>true</extensible>
+        <arguments>
+          <argument name="product">
+            <summary>Update product data</summary>
+            <type>magento.catalog.product</type>
+            <required>true</required>
+          </argument>
+        </arguments>
+      </command>
+
+      <command name="delete">
+        <summary>Delete an existing product</summary>
+        <extensible>true</extensible>
+        <arguments>
+          <argument name="product_id">
+            <summary>Product Identifiers</summary>
+            <type>string</type>
+            <required>true</required>
+          </argument>
+        </arguments>
+      </command>
+
+      <event name="updated">
+        <summary>Triggered once product updated</summary>
+        <extensible>true</extensible>
+        <arguments>
+          <argument name="product">
+            <summary>Product</summary>
+            <type>magento.catalog.product</type>
+            <required>true</required>
+          </argument>
+        </arguments>
+      </event>
+
+      <event name="deleted">
+        <summary>Triggered once product deleted</summary>
+        <extensible>true</extensible>
+        <arguments>
+          <argument name="product_id">
+            <summary>Product Identifier</summary>
+            <type>string</type>
+            <required>true</required>
+          </argument>
+        </arguments>
+      </event>
+    </service>
+
+    <service name="product_repository">
+      <summary>Product Repository</summary>
+
+      <query name="get">
+        <summary>Fetch product by ID</summary>
+        <extensible>false</extensible>
+        <arguments>
+          <argument name="id">
+            <summary>Product Identifier</summary>
+            <type>string</type>
+            <required>true</required>
+          </argument>
+        </arguments>
+        <returns>magento.catalog.product</returns>
+      </query>
+
+      <query name="find">
+        <summary>Find a single product by search criteria</summary>
+        <extensible>false</extensible>
+        <arguments>
+          <argument name="query">
+            <summary>Query</summary>
+            <type>magento.common.query</type>
+            <required>true</required>
+          </argument>
+        </arguments>
+        <returns>array[magento.catalog.product]</returns>
+      </query>
+    </service>
+
+    <struct name="product">
+      <summary>Product</summary>
+      <description>
+        Product represent a simplest physical or virtual item which can be bought by the customer.
+        Product data normally includes few static fields and batch of dynamically managed attributes to
+        store system information (eq. is_searchable, ean, country_of_origin etc) and information shown
+        to the customer (eq. long_description, color, or ssd_storage_size etc).
+      </description>
+      <extensible>true</extensible>
+      <properties>
+        <property name="id">
+          <summary>Identifier</summary>
+          <type>string</type>
+          <required>true</required>
+        </property>
+
+        <property name="sku">
+          <summary>Stock Keeping Unit of the product</summary>
+          <type>string</type>
+          <required>false</required>
+        </property>
+
+        <property name="name">
+          <summary>Name of the product</summary>
+          <description>
+            Name of the product meant to identify the product in a more human friendly way
+
+            Example:
+
+            ```
+            "name": [
+            {"locale": "en_US", "channel": "mobile", "value": "T-Shirt"},
+            {"locale": "es_ES", "channel": "mobile", "value": "Camiseta"}
+            ]
+            ```
+          </description>
+          <type>by_locale_and_channel[string]</type>
+          <required>false</required>
+        </property>
+
+        <property name="attribute_set">
+          <summary>Attribute set of the product</summary>
+          <description>
+            A string identifier of the product family . A human friendly code is preferred over number
+            or title.
+          </description>
+          <type>string</type>
+          <required>true</required>
+        </property>
+
+        <property name="enabled">
+          <summary>Tells if a product is enabled or not</summary>
+          <type>boolean</type>
+          <required>true</required>
+        </property>
+
+        <property name="visibility">
+          <summary>Visibility</summary>
+          <type>array[magento.catalog.product_visibility]</type>
+          <required>true</required>
+        </property>
+
+        <property name="created_at">
+          <summary>Date of creation of the product</summary>
+          <type>datetime</type>
+          <required>false</required>
+        </property>
+
+        <property name="modified_at">
+          <summary>Date of the last modification of the product</summary>
+          <type>datetime</type>
+          <required>false</required>
+        </property>
+
+        <property name="associations">
+          <summary>Relation of the product with other products</summary>
+          <description>
+            An array of product associations with other products
+          </description>
+          <type>array[magento.catalog.product_association]</type>
+          <required>false</required>
+        </property>
+
+        <property name="customizations">
+          <summary>Relation of the product with other products</summary>
+          <description>
+            An array of product associations with other products
+          </description>
+          <type>array[magento.catalog.product_customization]</type>
+          <required>false</required>
+        </property>
+      </properties>
+    </struct>
+
+    <struct name="product_association">
+      <summary>An association of a product with another product</summary>
+      <extensible>false</extensible>
+      <properties>
+        <property name="type">
+          <summary>Type of the association</summary>
+          <type>string</type>
+          <required>true</required>
+        </property>
+
+        <property name="products">
+          <summary>Identifiers of the product association</summary>
+          <type>array[string]</type>
+          <required>true</required>
+        </property>
+      </properties>
+    </struct>
+
+    <struct name="product_customization">
+      <summary>An customization of a product</summary>
+      <extensible>false</extensible>
+      <properties>
+        <property name="code">
+          <summary>An identifier of the customization</summary>
+          <type>string</type>
+          <required>true</required>
+        </property>
+        <property name="input_type">
+          <summary>The type of the customization</summary>
+          <type>string</type>
+          <required>true</required>
+        </property>
+        <property name="title">
+          <summary>The label of the customization</summary>
+          <type>by_locale_and_channel[string]</type>
+          <required>true</required>
+        </property>
+        <property name="constraint">
+          <summary>The constraints that a customization can be bounded</summary>
+          <type>map[string]</type>
+          <required>false</required>
+        </property>
+        <property name="options">
+          <summary>Available options for the customization</summary>
+          <description>
+            The options for dropdown, multiselect or other input type with predefined list of values.
+
+            Example:
+
+            ```
+            {
+              "l": {
+                "extra_price": {
+                  "type": "fixed",
+                  "amount": 19.41
+                },
+                "name:" [
+                  {"locale": "en_US", "channel": "web", "value": "Large"},
+                  {"locale": "es_ES", "channel": "web", "value": "Grande"},
+                ],
+                "sku": "-large",
+                "sort_order": 10
+              },
+              "xl": {
+                "extra_price": {
+                  "type": "percentage",
+                  "amount": 50.05
+                },
+                "name:" [
+                  {"locale": "en_US", "channel": "web", "value": "Extra Large"},
+                  {"locale": "es_ES", "channel": "web", "value": "Extra Grande"},
+                ],
+                "sku": "-xlarge",
+                "sort_order": 20
+              }
+            }
+            ```
+          </description>
+          <type>map[magento.catalog.product_customization_option]</type>
+          <required>false</required>
+        </property>
+        <property name="extra_price">
+          <summary>The extra price for the customization</summary>
+          <type>magento.catalog.product_customization_extraprice</type>
+          <required>true</required>
+        </property>
+      </properties>
+    </struct>
+
+    <struct name="product_customization_option">
+      <summary>Option of a customization</summary>
+      <extensible>false</extensible>
+      <properties>
+        <property name="name">
+          <summary>The name of the option.</summary>
+          <type>by_locale_and_channel[string]</type>
+          <required>true</required>
+        </property>
+        <property name="extra_price">
+          <summary>The value of the option.</summary>
+          <type>magento.catalog.product_customization_option</type>
+          <required>false</required>
+        </property>
+        <property name="sku">
+          <summary>The channel where the option is going to be used.</summary>
+          <type>string</type>
+          <required>false</required>
+        </property>
+        <property name="sort_order">
+          <summary>The locale of the option.</summary>
+          <type>integer</type>
+          <required>true</required>
+        </property>
+      </properties>
+    </struct>
+
+    <struct name="product_customization_extraprice">
+      <summary>The extra price for the customization</summary>
+      <extensible>false</extensible>
+      <properties>
+        <property name="type">
+          <summary>The type of the extra price. Percentage or fixed.</summary>
+          <type>string</type>
+          <required>true</required>
+        </property>
+        <property name="value">
+          <summary>The extra price itself</summary>
+          <type>float</type>
+          <required>true</required>
+        </property>
+      </properties>
+    </struct>
+
+    <enum name="product_visibility">
+      <value>catalog</value>
+      <value>search</value>
+    </enum>
+
+  </module>
+
+</specification>

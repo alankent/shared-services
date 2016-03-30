@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<specification xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+               xmlns="https://magento.com/open-specification"
+               xsi:schemaLocation="https://magento.com/open-specification ../specification.xsd">
+
+  <module name="magento.catalog">
+
+    <service name="category_management">
+      <summary>Category Management</summary>
+
+      <command name="update">
+        <summary>Update category properties</summary>
+        <extensible>false</extensible>
+        <arguments>
+          <argument name="category">
+            <summary>Category</summary>
+            <type>magento.catalog.category</type>
+            <required>true</required>
+          </argument>
+        </arguments>
+      </command>
+
+      <command name="delete">
+        <summary>Delete an existing category properties</summary>
+        <extensible>false</extensible>
+        <arguments>
+          <argument name="category_id">
+            <summary>Category Unique Identifier</summary>
+            <type>string</type>
+            <required>true</required>
+          </argument>
+        </arguments>
+      </command>
+
+      <event name="updated">
+        <summary>Triggered once category updated</summary>
+        <extensible>false</extensible>
+        <arguments>
+          <argument name="category">
+            <summary>Category</summary>
+            <type>magento.catalog.category</type>
+            <required>true</required>
+          </argument>
+        </arguments>
+      </event>
+
+      <event name="deleted">
+        <summary>Triggered once category deleted</summary>
+        <extensible>false</extensible>
+        <arguments>
+          <argument name="category">
+            <summary>Category</summary>
+            <type>magento.catalog.category</type>
+            <required>true</required>
+          </argument>
+        </arguments>
+      </event>
+    </service>
+
+    <service name="category_repository">
+      <summary>Category Repository</summary>
+
+      <query name="find">
+        <summary>Find categories by criteria</summary>
+        <extensible>true</extensible>
+        <arguments>
+          <argument name="query">
+            <summary>Search Query</summary>
+            <type>magento.common.query</type>
+            <required>true</required>
+          </argument>
+        </arguments>
+        <returns>array[magento.catalog.category]</returns>
+      </query>
+
+      <query name="get">
+        <summary>Fetch category by Unique identifier</summary>
+        <extensible>true</extensible>
+        <arguments>
+          <argument name="id">
+            <summary>Unique Identifier</summary>
+            <type>string</type>
+            <required>true</required>
+          </argument>
+        </arguments>
+        <returns>magento.catalog.category</returns>
+      </query>
+    </service>
+
+    <struct name="category">
+      <summary>Category Data Model</summary>
+      <extensible>true</extensible>
+      <properties>
+        <property name="id">
+          <summary>Unique Identifier</summary>
+          <type>string</type>
+          <required>true</required>
+        </property>
+        <property name="name">
+          <summary>Name</summary>
+          <type>string</type>
+          <required>true</required>
+        </property>
+      </properties>
+    </struct>
+
+  </module>
+</specification>

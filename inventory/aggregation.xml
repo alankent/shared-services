@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<specification xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+               xmlns="https://magento.com/open-specification"
+               xsi:schemaLocation="https://magento.com/open-specification ../specification.xsd">
+
+  <module name="magento.inventory">
+    <service name="aggregation_management">
+      <summary>Stock Aggregation Management</summary>
+
+      <event name="updated">
+        <summary>Notification about stock aggregation update</summary>
+        <extensible>false</extensible>
+        <arguments>
+          <argument name="aggregation">
+            <summary>Aggregation</summary>
+            <type>magento.inventory.aggregation</type>
+            <required>true</required>
+          </argument>
+        </arguments>
+      </event>
+    </service>
+
+    <service name="aggregation_stock_management">
+      <summary>Stock Aggregation Management</summary>
+
+      <event name="updated">
+        <summary>Notification about stock aggregation update</summary>
+        <extensible>false</extensible>
+        <arguments>
+          <argument name="stock">
+            <summary>Aggregation Stock</summary>
+            <type>magento.inventory.aggregation_stock</type>
+            <required>true</required>
+          </argument>
+        </arguments>
+      </event>
+    </service>
+
+    <struct name="aggregation">
+      <summary>Stock Aggregation</summary>
+      <description>
+        Stock Aggregation represent a group of stock items aggregated by some criteria
+      </description>
+      <extensible>true</extensible>
+      <properties>
+        <property name="id">
+          <summary>Unique identifier</summary>
+          <type>string</type>
+          <required>true</required>
+        </property>
+        <property name="name">
+          <summary>Human friendly name</summary>
+          <type>string</type>
+          <required>true</required>
+        </property>
+      </properties>
+    </struct>
+
+    <struct name="aggregation_stock">
+      <summary>Aggregated stock</summary>
+      <description>
+        Aggregated stock represents available stock in a certain channel
+      </description>
+      <extensible>true</extensible>
+      <properties>
+        <property name="aggregation_id">
+          <summary>The identifier of the aggregation which this stock belongs to</summary>
+          <type>string</type>
+          <required>true</required>
+        </property>
+        <property name="sku">
+          <summary>The sku of the product</summary>
+          <type>string</type>
+          <required>true</required>
+        </property>
+        <property name="quantity">
+          <summary>The units of the product available</summary>
+          <type>float</type>
+          <required>true</required>
+        </property>
+        <property name="in_stock">
+          <summary>If the product is in stock or not</summary>
+          <description>A flag to mark if the product if it's in stock or not independently of the number of units available</description>
+          <type>boolean</type>
+          <required>false</required>
+        </property>
+        <property name="safety_stock">
+          <summary>Number of units that we don't take into consideration</summary>
+          <description>The number of units available that we don't want to take into consideration when computing stock</description>
+          <type>float</type>
+          <required>false</required>
+        </property>
+        <property name="is_backorderable">
+          <summary>If the product is available for backorders</summary>
+          <type>boolean</type>
+          <required>false</required>
+        </property>
+        <property name="is_preorderable">
+          <summary>If the product is available for preorders</summary>
+          <type>boolean</type>
+          <required>false</required>
+        </property>
+        <property name="type">
+          <summary>The type of stock (GOOD, DAMAGED, REPAIRED ...)</summary>
+          <type>string</type>
+          <required>false</required>
+        </property>
+      </properties>
+    </struct>
+
+  </module>
+
+</specification>

@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<specification xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+               xmlns="https://magento.com/open-specification"
+               xsi:schemaLocation="https://magento.com/open-specification ../specification.xsd">
+
+  <module name="magento.inventory">
+    <service name="source_stock_management">
+      <summary>Source Stock Management</summary>
+
+      <command name="update">
+        <summary>Update stock information for an SKU</summary>
+        <extensible>true</extensible>
+        <arguments>
+          <argument name="stock">
+            <summary>Stock</summary>
+            <type>magento.inventory.source_stock</type>
+            <required>true</required>
+          </argument>
+        </arguments>
+      </command>
+
+      <event name="updated">
+        <summary>Notification about stock update</summary>
+        <extensible>true</extensible>
+        <arguments>
+          <argument name="stock">
+            <summary>Stock</summary>
+            <type>magento.inventory.source_stock</type>
+            <required>true</required>
+          </argument>
+        </arguments>
+      </event>
+    </service>
+
+    <service name="source_stock_repository">
+      <summary>Source Stock Repository</summary>
+
+      <query name="online_stock_availability">
+        <summary>Check online store stock availability for multiple SKU</summary>
+        <extensible>false</extensible>
+        <arguments>
+
+        </arguments>
+        <returns>array[magento.inventory.source_stock]</returns>
+      </query>
+
+      <query name="nearby_stock_availability">
+        <summary>Check nearby store stock availability for multiple SKU</summary>
+        <extensible>false</extensible>
+        <arguments>
+
+        </arguments>
+        <returns>array[magento.inventory.source_stock]</returns>
+      </query>
+
+      <query name="find">
+        <summary>Find stock information for given SKU</summary>
+        <extensible>false</extensible>
+        <arguments>
+          <argument name="query">
+            <summary>Search Query</summary>
+            <type>magento.common.query</type>
+            <required>true</required>
+          </argument>
+        </arguments>
+        <returns>array[magento.inventory.source_stock]</returns>
+      </query>
+    </service>
+
+    <struct name="source">
+      <summary>Source</summary>
+      <extensible>true</extensible>
+      <properties>
+        <property name="id">
+          <summary>Unique identifier</summary>
+          <type>string</type>
+          <required>true</required>
+        </property>
+        <property name="name">
+          <summary>Human friendly name</summary>
+          <type>string</type>
+          <required>true</required>
+        </property>
+      </properties>
+    </struct>
+
+    <struct name="source_stock">
+      <summary>Source Stock</summary>
+      <description>
+        Stock represent a real stock level in a certain source
+      </description>
+      <extensible>true</extensible>
+      <properties>
+        <property name="sku">
+          <summary>The sku of the product</summary>
+          <type>string</type>
+          <required>true</required>
+        </property>
+        <property name="quantity">
+          <summary>The units of the product available</summary>
+          <type>float</type>
+          <required>true</required>
+        </property>
+        <property name="source_id">
+          <summary>The identifier of the source who owns the stock unit</summary>
+          <type>string</type>
+          <required>true</required>
+        </property>
+        <property name="type">
+          <summary>The type of stock (GOOD, DAMAGED, REPAIRED ...)</summary>
+          <type>string</type>
+          <required>false</required>
+        </property>
+      </properties>
+    </struct>
+
+  </module>
+
+</specification>
