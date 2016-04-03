@@ -1,10 +1,10 @@
-Magento Open Commerce Standard – Service Specification Language
-===============================================================
+Magento Shared Services – Service Specification Language
+========================================================
 *Version 0.1-draft*
 
 # Introduction
 
-Each service defined within the Magento Open Commerce Standard is formally defined by a service specification. Currently service specifications are defined in XML. An XSD is provided to validate specification documents.
+Each service defined within the Magento Shared Services definition is formally defined by a service specification. Currently service specifications are defined in XML. An XSD is provided to validate specification documents.
 
 # Purpose
 
@@ -37,7 +37,7 @@ Structured data is passed as a part of requests and responses. The precise encod
 
 ### Core Data Types
 
-Core data types are types defined by the Magento Open Commerce Standard and cannot be changed by specifications. Core data types include simple types such as strings and integers.
+Core data types are types defined by the Magento Shared Services definitions and cannot be changed by specifications. Core data types include simple types such as strings and integers.
 
 The following simple types are supported:
 
