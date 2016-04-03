@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified"
+           targetNamespace="https://magento.com/open-specification"
+           xmlns="https://magento.com/open-specification"
+           xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+  <xs:element name="specification" type="SpecificationType"/>
+
+  <xs:group name="DescriptionGroup">
+    <xs:sequence>
+      <xs:element type="xs:string" name="summary" minOccurs="1" maxOccurs="1"/>
+      <xs:element type="xs:string" name="description" minOccurs="0" maxOccurs="1"/>
+    </xs:sequence>
+  </xs:group>
+
+  <xs:complexType name="SpecificationType">
+    <xs:sequence>
+      <xs:choice maxOccurs="unbounded" minOccurs="0">
+        <xs:element type="ImportType" name="import"/>
+        <xs:element type="ModuleType" name="module"/>
+      </xs:choice>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="ModuleType">
+    <xs:sequence>
+      <xs:choice maxOccurs="unbounded" minOccurs="0">
+        <xs:element type="ServiceType" name="service"/>
+        <xs:element type="StructType" name="struct"/>
+        <xs:element type="EnumType" name="enum"/>
+        <xs:element type="ExtensionType" name="extension"/>
+      </xs:choice>
+    </xs:sequence>
+    <xs:attribute type="ModuleNameType" name="name" use="required"/>
+  </xs:complexType>
+
+  <xs:complexType name="ImportType">
+    <xs:attribute type="xs:token" name="location" use="required"/>
+  </xs:complexType>
+
+  <xs:complexType name="ServiceType">
+    <xs:sequence>
+      <xs:group ref="DescriptionGroup"/>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element type="QueryType" name="query"/>
+        <xs:element type="EventType" name="event"/>
+        <xs:element type="CommandType" name="command"/>
+      </xs:choice>
+    </xs:sequence>
+    <xs:attribute type="ServiceNameType" name="name" use="required"/>
+  </xs:complexType>
+
+  <xs:complexType name="InteractionType" abstract="true">
+    <xs:sequence>
+      <xs:group ref="DescriptionGroup"/>
+      <xs:element type="xs:boolean" name="extensible" minOccurs="1"/>
+      <xs:element name="arguments" minOccurs="1">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element type="PropertyType" name="argument" minOccurs="0" maxOccurs="unbounded"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute type="InteractionNameType" name="name" use="required"/>
+  </xs:complexType>
+
+  <xs:complexType name="CommandType">
+    <xs:complexContent>
+      <xs:extension base="InteractionType">
+        <xs:sequence>
+          <xs:element type="xs:token" name="returns" minOccurs="0" maxOccurs="1"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="QueryType">
+    <xs:complexContent>
+      <xs:extension base="InteractionType">
+        <xs:sequence>
+          <xs:element type="xs:token" name="returns" minOccurs="1" maxOccurs="1"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="EventType">
+    <xs:complexContent>
+      <xs:extension base="InteractionType"/>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="StructType" mixed="true">
+    <xs:sequence>
+      <xs:group ref="DescriptionGroup"/>
+      <xs:element type="xs:boolean" name="extensible" minOccurs="1"/>
+      <xs:element name="properties" minOccurs="1">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element type="PropertyType" name="property" minOccurs="0" maxOccurs="unbounded"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute type="xs:token" name="name" use="required"/>
+  </xs:complexType>
+
+  <xs:complexType name="ExtensionType" mixed="true">
+    <xs:sequence>
+      <xs:group ref="DescriptionGroup"/>
+      <xs:element name="properties" minOccurs="1">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element type="PropertyType" name="property" minOccurs="0" maxOccurs="unbounded"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute type="xs:token" name="extends" use="required"/>
+    <xs:attribute type="xs:token" name="name" use="required"/>
+  </xs:complexType>
+
+  <xs:complexType name="PropertyType">
+    <xs:sequence>
+      <xs:group ref="DescriptionGroup"/>
+      <xs:element type="PropertyTypeNameType" name="type" minOccurs="1"/>
+      <xs:element type="xs:boolean" name="required" minOccurs="1"/>
+    </xs:sequence>
+    <xs:attribute type="xs:token" name="name" use="required"/>
+  </xs:complexType>
+
+  <xs:complexType name="EnumType">
+    <xs:sequence>
+      <xs:element type="xs:token" name="value" minOccurs="1" maxOccurs="unbounded"/>
+    </xs:sequence>
+    <xs:attribute type="xs:token" name="name" use="required"/>
+  </xs:complexType>
+
+  <xs:simpleType name="PropertyTypeNameType">
+    <xs:restriction base="xs:token" />
+  </xs:simpleType>
+
+  <xs:simpleType name="ModuleNameType">
+    <xs:restriction base="xs:token">
+      <xs:pattern value="[a-z][a-z0-9_]*\.[a-z][a-z0-9_]*" />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="ServiceNameType">
+    <xs:restriction base="xs:token">
+      <xs:pattern value="[a-z][a-z0-9_]*" />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="InteractionNameType">
+    <xs:restriction base="xs:token">
+      <xs:pattern value="[a-z][a-z0-9_]*" />
+    </xs:restriction>
+  </xs:simpleType>
+
+</xs:schema>
